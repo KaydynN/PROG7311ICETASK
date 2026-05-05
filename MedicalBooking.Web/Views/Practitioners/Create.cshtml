@@ -1,0 +1,22 @@
+﻿@model MedicalBooking.Web.Models.PractitionerSchedule
+
+<h2>Add Practitioner Schedule</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label>Practitioner</label>
+        <input asp-for="Practitioner" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Start Time</label>
+        <input asp-for="StartTime" type="datetime-local" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>End Time</label>
+        <input asp-for="EndTime" type="datetime-local" class="form-control" />
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+</form>
