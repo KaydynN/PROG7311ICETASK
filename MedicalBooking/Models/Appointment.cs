@@ -20,7 +20,7 @@ namespace MedicalBooking.API.Models
 
         public string Reason { get; set; }
 
-        // ✅ NEW: Prevent reminder spam
+        
         public bool ReminderSent { get; set; } = false;
     }
 }
