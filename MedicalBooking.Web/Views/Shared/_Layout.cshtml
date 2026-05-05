@@ -1,49 +1,182 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MedicalBooking.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MedicalBooking.Web.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - MedBook Pro</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+            body {
+                font-family: 'Poppins', sans-serif;
+                background-color: #F7F9FC;
+                margin: 0;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                width: 240px;
+                height: 100vh;
+                position: fixed;
+                background: linear-gradient(180deg, #2E86AB, #00A896);
+                color: white;
+                padding: 20px;
+            }
+
+                .sidebar h4 {
+                    font-weight: bold;
+                    margin-bottom: 30px;
+                }
+
+                .sidebar a {
+                    display: block;
+                    color: white;
+                    text-decoration: none;
+                    margin-bottom: 15px;
+                    padding: 10px;
+                    border-radius: 8px;
+                    transition: 0.2s;
+                }
+
+                    .sidebar a:hover {
+                        background: rgba(255,255,255,0.2);
+                    }
+
+            /* Main content */
+            .content {
+                margin-left: 260px;
+                padding: 30px;
+            }
+
+            /* Cards */
+            .card {
+                border: none;
+                border-radius: 16px;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+                transition: 0.2s;
+            }
+
+                .card:hover {
+                    transform: translateY(-5px);
+                }
+
+            /* Buttons */
+            .btn-primary {
+                background-color: #2E86AB;
+                border: none;
+                border-radius: 10px;
+            }
+
+            .btn-success {
+                background-color: #00A896;
+                border: none;
+            }
+
+            .btn-warning {
+                border-radius: 10px;
+            }
+
+            .btn-danger {
+                border-radius: 10px;
+            }
+
+            /* Tables */
+            table {
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            thead {
+                background-color: #2E86AB;
+                color: white;
+            }
+
+            /* Header section */
+            .page-header {
+                margin-bottom: 25px;
+            }
+
+                .page-header h2 {
+                    font-weight: 600;
+                }
+    </style>
 </head>
+<script>
+    async function loadReminderCount() {
+        try {
+            const response = await fetch('/Reminders/Index');
+            const text = await response.text();
+
+            const count = (text.match(/<tr>/g) || []).length - 1;
+
+            const badge = document.getElementById("reminderBadge");
+
+            if (count > 0) {
+                badge.style.display = "inline-block";
+                badge.innerText = count;
+            } else {
+                badge.style.display = "none";
+            }
+        } catch (e) {
+            console.error("Reminder badge error", e);
+        }
+    }
+
+    loadReminderCount();
+</script>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MedicalBooking.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4>🏥 MedBook</h4>
+
+        <a asp-controller="Dashboard" asp-action="Index">
+            <i class="bi bi-speedometer2"></i> Overview
+        </a>
+
+        <a asp-controller="Appointments" asp-action="Index">
+            <i class="bi bi-calendar-check"></i> Bookings
+        </a>
+
+        <a asp-controller="Practitioners" asp-action="Index">
+            <i class="bi bi-person-badge"></i> Medical Staff
+        </a>
+
+        <a asp-controller="Reports" asp-action="Index">
+            <i class="bi bi-bar-chart"></i> Analytics
+        </a>
+        <a asp-controller="Reminders" asp-action="Index" class="position-relative">
+            <i class="bi bi-bell"></i> Reminders
+
+            <span id="reminderBadge"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style="display:none;">
+                0
+            </span>
+        </a>
+
+        <hr />
+
+        <a asp-controller="Auth" asp-action="Logout" class="text-warning">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - MedicalBooking.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Main Content -->
+    <div class="content">
+        @RenderBody()
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
 </body>
 </html>
