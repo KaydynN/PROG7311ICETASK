@@ -1,42 +1,25 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+using MedicalBooking.API.Interfaces;
+using MedicalBooking.API.Repositories;
+using MedicalBooking.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// MVC
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// HttpClient (API connection)
-var apiUrl = builder.Configuration["API_BASE_URL"]
-             ?? "https://localhost:7163/";
-
-builder.Services.AddHttpClient("MedicalAPI", client =>
-{
-    client.BaseAddress = new Uri(apiUrl);
-});
-
-//  AUTHENTICATION
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Auth/Login";
-        options.AccessDeniedPath = "/Auth/Login";
-    });
-
-builder.Services.AddAuthorization();
+// DI
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IPractitionerScheduleRepository, PractitionerScheduleRepository>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
+builder.Services.AddHostedService<BackgroundReminderService>();
+builder.Services.AddScoped<IReportingService, ReportingService>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-}
-
-app.UseStaticFiles();
-app.UseRouting();
-
-
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllerRoute(
     name: "default",
