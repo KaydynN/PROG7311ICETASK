@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
-using System.Text.Json.Serialization;
 
 [Authorize]
 public class PractitionersController : Controller

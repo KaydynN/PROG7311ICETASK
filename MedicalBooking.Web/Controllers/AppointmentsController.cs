@@ -1,9 +1,8 @@
-﻿using MedicalBooking.Web.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using MedicalBooking.Web.Models;
 using Newtonsoft.Json;
 using System.Text;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authorization;
 
 [Authorize]
 public class AppointmentsController : Controller

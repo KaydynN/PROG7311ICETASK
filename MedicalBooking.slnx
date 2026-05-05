@@ -1,5 +1,7 @@
 <Solution>
-  <Folder Name="/Solution Items/" />
-  <Project Path="../../../../../../Documents/MedicalBooking/MedicalBooking.Web/MedicalBooking.Web.csproj" />
-  <Project Path="../../../../../../Documents/MedicalBooking/MedicalBooking/MedicalBooking.csproj" />
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Project Path="MedicalBooking.Web/MedicalBooking.Web.csproj" />
+  <Project Path="MedicalBooking/MedicalBooking.csproj" />
 </Solution>
