@@ -1,0 +1,29 @@
+﻿@model MedicalBooking.Web.Models.Appointment
+
+<h2>Reschedule Appointment</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Patient</label>
+        <input asp-for="PatientName" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label>Practitioner</label>
+        <input asp-for="Practitioner" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label>Appointment Date</label>
+
+        <!-- 🔥 CRITICAL FIX -->
+        <input asp-for="AppointmentDate"
+               type="datetime-local"
+               class="form-control"
+               value="@Model.AppointmentDate.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+</form>
