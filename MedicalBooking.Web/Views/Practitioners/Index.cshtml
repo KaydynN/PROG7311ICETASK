@@ -1,0 +1,25 @@
+﻿@model List<MedicalBooking.Web.Models.PractitionerSchedule>
+
+<h2 class="mb-3">Practitioner Schedules</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">+ Add Schedule</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Practitioner</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var schedule in Model)
+        {
+            <tr>
+                <td>@schedule.Practitioner</td>
+                <td>@schedule.StartTime</td>
+                <td>@schedule.EndTime</td>
+            </tr>
+        }
+    </tbody>
+</table>
