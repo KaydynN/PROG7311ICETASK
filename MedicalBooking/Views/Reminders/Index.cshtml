@@ -1,0 +1,31 @@
+﻿@model IEnumerable<MedicalBooking.Web.Models.Reminder>
+
+<h2 class="mb-4">🔔 Upcoming Reminders</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-success">No upcoming reminders 🎉</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Patient</th>
+                <th>Practitioner</th>
+                <th>Appointment Time</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PatientName</td>
+                    <td>@item.Practitioner</td>
+                    <td>@item.ReminderDate.ToString("dd MMM yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
