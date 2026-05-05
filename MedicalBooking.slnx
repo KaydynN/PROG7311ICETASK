@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MedicalBooking.Web/MedicalBooking.Web.csproj" />
+  <Project Path="MedicalBooking/MedicalBooking.csproj" />
+</Solution>
