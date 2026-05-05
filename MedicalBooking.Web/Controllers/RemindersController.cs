@@ -1,9 +1,7 @@
-﻿using MedicalBooking.API.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using MedicalBooking.Web.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authorization;
 
 [Authorize]
 public class RemindersController : Controller

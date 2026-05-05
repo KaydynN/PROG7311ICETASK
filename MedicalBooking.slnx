@@ -1,4 +1,5 @@
 <Solution>
-  <Project Path="MedicalBooking.Web/MedicalBooking.Web.csproj" />
-  <Project Path="MedicalBooking/MedicalBooking.csproj" />
+  <Folder Name="/Solution Items/" />
+  <Project Path="../../../../../../Documents/MedicalBooking/MedicalBooking.Web/MedicalBooking.Web.csproj" />
+  <Project Path="../../../../../../Documents/MedicalBooking/MedicalBooking/MedicalBooking.csproj" />
 </Solution>
