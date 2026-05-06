@@ -10,12 +10,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Doctors\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MedicalBooking\MedicalBooking.csproj" />
-  </ItemGroup>
-
 </Project>

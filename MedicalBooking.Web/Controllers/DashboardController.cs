@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MedicalBooking.Web.Models;
-using Newtonsoft.Json;
+﻿using MedicalBooking.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace MedicalBooking.Web.Controllers
 {
@@ -24,7 +24,9 @@ namespace MedicalBooking.Web.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadAsStringAsync();
-                report = JsonConvert.DeserializeObject<AppointmentReport>(data) ?? new();
+
+                report = JsonConvert.DeserializeObject<AppointmentReport>(data)
+                         ?? new AppointmentReport();
             }
 
             return View(report);

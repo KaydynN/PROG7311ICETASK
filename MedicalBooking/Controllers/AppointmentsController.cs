@@ -18,18 +18,20 @@ namespace MedicalBooking.API.Controllers
 
         [HttpGet]
         public IActionResult GetAll()
-            => Ok(_service.GetAppointments());
+        {
+            return Ok(_service.GetAppointments());
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var appt = _service.GetAppointments()
+            var appointment = _service.GetAppointments()
                 .FirstOrDefault(a => a.Id == id);
 
-            if (appt == null)
+            if (appointment == null)
                 return NotFound();
 
-            return Ok(appt);
+            return Ok(appointment);
         }
 
         [HttpPost]
@@ -42,10 +44,10 @@ namespace MedicalBooking.API.Controllers
                 return Conflict("Conflict detected");
 
             _service.BookAppointment(appointment);
+
             return Ok(appointment);
         }
 
-        // ✅ FULL UPDATE FIX (IMPORTANT)
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Appointment updated)
         {
@@ -58,14 +60,15 @@ namespace MedicalBooking.API.Controllers
             if (existing == null)
                 return NotFound();
 
-            // Prevent conflict (ignore same record)
-            if (_service.ExistsConflict(updated.Practitioner, updated.AppointmentDate)
-                && existing.AppointmentDate != updated.AppointmentDate)
-            {
-                return Conflict("Conflict detected");
-            }
+            var conflict = _service.GetAppointments()
+                .Any(a =>
+                    a.Id != id &&
+                    a.Practitioner == updated.Practitioner &&
+                    a.AppointmentDate == updated.AppointmentDate);
 
-            // ✅ Update ALL fields
+            if (conflict)
+                return Conflict("Conflict detected");
+
             existing.PatientName = updated.PatientName;
             existing.Practitioner = updated.Practitioner;
             existing.AppointmentDate = updated.AppointmentDate;
@@ -85,6 +88,7 @@ namespace MedicalBooking.API.Controllers
                 return NotFound();
 
             _service.CancelAppointment(id);
+
             return Ok();
         }
     }

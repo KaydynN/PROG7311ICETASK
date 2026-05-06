@@ -1,39 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MedicalBooking.API.Interfaces;
+﻿using MedicalBooking.API.Interfaces;
 using MedicalBooking.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("api/[controller]")]
-public class PractitionerScheduleController : ControllerBase
+namespace MedicalBooking.API.Controllers
 {
-    private readonly IPractitionerScheduleRepository _repo;
-
-    public PractitionerScheduleController(IPractitionerScheduleRepository repo)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PractitionerScheduleController : ControllerBase
     {
-        _repo = repo;
-    }
+        private readonly IPractitionerScheduleRepository _repo;
 
-    [HttpGet]
-    public IActionResult GetAll() => Ok(_repo.GetAll());
+        public PractitionerScheduleController(IPractitionerScheduleRepository repo)
+        {
+            _repo = repo;
+        }
 
-    [HttpPost]
-    public IActionResult Create([FromBody] PractitionerSchedule schedule)
-    {
-        _repo.Add(schedule);
-        return Ok(schedule);
-    }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_repo.GetAll());
+        }
 
-    [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] PractitionerSchedule schedule)
-    {
-        _repo.Update(id, schedule);
-        return Ok(schedule);
-    }
+        [HttpPost]
+        public IActionResult Create([FromBody] PractitionerSchedule schedule)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
-    {
-        _repo.Delete(id);
-        return Ok();
+            _repo.Add(schedule);
+
+            return Ok(schedule);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] PractitionerSchedule schedule)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _repo.Update(id, schedule);
+
+            return Ok(schedule);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _repo.Delete(id);
+
+            return Ok();
+        }
     }
 }

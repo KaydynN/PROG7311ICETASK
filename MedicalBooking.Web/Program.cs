@@ -1,20 +1,34 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // MVC
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews()
+    .ConfigureApplicationPartManager(manager =>
+    {
+        // Safety fix:
+        // Prevent MedicalBooking.Web from discovering API controllers
+        // if the Web project accidentally references MedicalBooking.API.
+        var apiAssembly = manager.ApplicationParts
+            .FirstOrDefault(part => part.Name == "MedicalBooking.API");
 
-// HttpClient (API connection)
-var apiUrl = builder.Configuration["API_BASE_URL"]
-             ?? "https://localhost:7163/";
+        if (apiAssembly != null)
+        {
+            manager.ApplicationParts.Remove(apiAssembly);
+        }
+    });
+
+// HttpClient connection to API
+var apiUrl = builder.Configuration["API_BASE_URL"] ?? "https://localhost:7163/";
 
 builder.Services.AddHttpClient("MedicalAPI", client =>
 {
     client.BaseAddress = new Uri(apiUrl);
 });
 
-// ✅ AUTHENTICATION
+// Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -32,9 +46,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
+
 app.UseRouting();
 
-// ✅ IMPORTANT ORDER
 app.UseAuthentication();
 app.UseAuthorization();
 

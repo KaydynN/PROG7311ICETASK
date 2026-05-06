@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MedicalBooking.Web.Data;
+using MedicalBooking.Web.Helpers;
+using MedicalBooking.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
-using MedicalBooking.Web.Data;
-using MedicalBooking.Web.Models;
-using MedicalBooking.Web.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MedicalBooking.Web.Controllers
 {
     public class AuthController : Controller
     {
         [AllowAnonymous]
-        public IActionResult Login() => View();
+        public IActionResult Login()
+        {
+            return View();
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -45,15 +47,20 @@ namespace MedicalBooking.Web.Controllers
                 claims,
                 CookieAuthenticationDefaults.AuthenticationScheme);
 
+            var principal = new ClaimsPrincipal(identity);
+
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity));
+                principal);
 
             return RedirectToAction("Index", "Dashboard");
         }
 
         [AllowAnonymous]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            return View();
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -77,7 +84,7 @@ namespace MedicalBooking.Web.Controllers
             {
                 Name = name,
                 Email = email,
-                Password = SecurityHelper.Hash(password) // ✅ HASHED
+                Password = SecurityHelper.Hash(password)
             });
 
             return RedirectToAction("Login");

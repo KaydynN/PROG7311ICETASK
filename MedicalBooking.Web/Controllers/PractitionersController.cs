@@ -4,43 +4,58 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
-[Authorize]
-public class PractitionersController : Controller
+namespace MedicalBooking.Web.Controllers
 {
-    private readonly HttpClient _client;
-
-    public PractitionersController(IHttpClientFactory factory)
+    [Authorize]
+    public class PractitionersController : Controller
     {
-        _client = factory.CreateClient("MedicalAPI");
-    }
+        private readonly HttpClient _client;
 
-    public async Task<IActionResult> Index()
-    {
-        var response = await _client.GetAsync("api/practitionerschedule");
-        var data = await response.Content.ReadAsStringAsync();
+        public PractitionersController(IHttpClientFactory factory)
+        {
+            _client = factory.CreateClient("MedicalAPI");
+        }
 
-        var schedules = JsonConvert.DeserializeObject<List<PractitionerSchedule>>(data) ?? new();
+        public async Task<IActionResult> Index()
+        {
+            var response = await _client.GetAsync("api/practitionerschedule");
 
-        return View(schedules);
-    }
+            if (!response.IsSuccessStatusCode)
+                return View(new List<PractitionerSchedule>());
 
-    public IActionResult Create() => View();
+            var data = await response.Content.ReadAsStringAsync();
 
-    [HttpPost]
-    public async Task<IActionResult> Create(PractitionerSchedule schedule)
-    {
-        var json = JsonConvert.SerializeObject(schedule);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var schedules = JsonConvert.DeserializeObject<List<PractitionerSchedule>>(data)
+                            ?? new List<PractitionerSchedule>();
 
-        await _client.PostAsync("api/practitionerschedule", content);
+            return View(schedules);
+        }
 
-        return RedirectToAction("Index");
-    }
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-    [HttpPost]
-    public async Task<IActionResult> Delete(int id)
-    {
-        await _client.DeleteAsync($"api/practitionerschedule/{id}");
-        return RedirectToAction("Index");
+        [HttpPost]
+        public async Task<IActionResult> Create(PractitionerSchedule schedule)
+        {
+            if (!ModelState.IsValid)
+                return View(schedule);
+
+            var json = JsonConvert.SerializeObject(schedule);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            await _client.PostAsync("api/practitionerschedule", content);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _client.DeleteAsync($"api/practitionerschedule/{id}");
+
+            return RedirectToAction("Index");
+        }
     }
 }

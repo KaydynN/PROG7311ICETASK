@@ -1,42 +1,47 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MedicalBooking.Web.Models;
-using Newtonsoft.Json;
+﻿using MedicalBooking.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
-[Authorize]
-public class RemindersController : Controller
+namespace MedicalBooking.Web.Controllers
 {
-    private readonly HttpClient _client;
-
-    public RemindersController(IHttpClientFactory factory)
+    [Authorize]
+    public class RemindersController : Controller
     {
-        _client = factory.CreateClient("MedicalAPI");
-    }
+        private readonly HttpClient _client;
 
-    public async Task<IActionResult> Index()
-    {
-        var response = await _client.GetAsync("api/appointments");
+        public RemindersController(IHttpClientFactory factory)
+        {
+            _client = factory.CreateClient("MedicalAPI");
+        }
 
-        if (!response.IsSuccessStatusCode)
-            return View(new List<Reminder>());
+        public async Task<IActionResult> Index()
+        {
+            var response = await _client.GetAsync("api/appointments");
 
-        var data = await response.Content.ReadAsStringAsync();
-        var appointments = JsonConvert.DeserializeObject<List<Appointment>>(data) ?? new();
+            if (!response.IsSuccessStatusCode)
+                return View(new List<Reminder>());
 
-        var reminders = appointments
-            .Where(a =>
-                !a.Attended &&
-                a.AppointmentDate > DateTime.Now &&
-                a.AppointmentDate <= DateTime.Now.AddMinutes(30))
-            .Select(a => new Reminder
-            {
-                Id = a.Id,
-                PatientName = a.PatientName,
-                Practitioner = a.Practitioner,
-                ReminderDate = a.AppointmentDate
-            })
-            .ToList();
+            var data = await response.Content.ReadAsStringAsync();
 
-        return View(reminders);
+            var appointments = JsonConvert.DeserializeObject<List<Appointment>>(data)
+                               ?? new List<Appointment>();
+
+            var reminders = appointments
+                .Where(a =>
+                    !a.Attended &&
+                    a.AppointmentDate > DateTime.Now &&
+                    a.AppointmentDate <= DateTime.Now.AddMinutes(30))
+                .Select(a => new Reminder
+                {
+                    Id = a.Id,
+                    PatientName = a.PatientName,
+                    Practitioner = a.Practitioner,
+                    ReminderDate = a.AppointmentDate
+                })
+                .ToList();
+
+            return View(reminders);
+        }
     }
 }

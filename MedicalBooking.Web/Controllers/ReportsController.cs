@@ -3,28 +3,31 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-[Authorize]
-public class ReportsController : Controller
+namespace MedicalBooking.Web.Controllers
 {
-    private readonly HttpClient _client;
-
-    public ReportsController(IHttpClientFactory factory)
+    [Authorize]
+    public class ReportsController : Controller
     {
-        _client = factory.CreateClient("MedicalAPI");
-    }
+        private readonly HttpClient _client;
 
-    public async Task<IActionResult> Index()
-    {
-        var response = await _client.GetAsync("api/reporting/summary");
+        public ReportsController(IHttpClientFactory factory)
+        {
+            _client = factory.CreateClient("MedicalAPI");
+        }
 
-        if (!response.IsSuccessStatusCode)
-            return View(new AppointmentReport());
+        public async Task<IActionResult> Index()
+        {
+            var response = await _client.GetAsync("api/reporting/summary");
 
-        var data = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return View(new AppointmentReport());
 
-        var report = JsonConvert.DeserializeObject<AppointmentReport>(data)
-                     ?? new AppointmentReport();
+            var data = await response.Content.ReadAsStringAsync();
 
-        return View(report);
+            var report = JsonConvert.DeserializeObject<AppointmentReport>(data)
+                         ?? new AppointmentReport();
+
+            return View(report);
+        }
     }
 }

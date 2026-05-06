@@ -16,6 +16,8 @@ namespace MedicalBooking.API.Controllers
 
         [HttpGet("summary")]
         public IActionResult Summary()
-            => Ok(_service.GenerateReport());
+        {
+            return Ok(_service.GenerateReport());
+        }
     }
 }
